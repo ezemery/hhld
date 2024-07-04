@@ -1,18 +1,14 @@
-# Turborepo Docker starter
+# High Level System Design Practise
 
-This is an official Docker starter Turborepo.
+This repo is used to practise implementation of high level system designs to help improve my knowledge in the topic
 
-## Using this example
+## Bootstrapped using Turbo repo
 
-Run the following command:
-
-```sh
-npx create-turbo@latest -e with-docker
-```
+This is a monorepo repository boostrapped with Turbo repo. This is done to have all the projects for system design in one repository
 
 ## What's inside?
 
-This Turborepo includes the following:
+This repo includes the following:
 
 ### Apps and Packages
 
