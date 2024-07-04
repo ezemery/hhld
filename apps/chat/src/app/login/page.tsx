@@ -1,4 +1,5 @@
 import { config } from "../config";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -6,7 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from "../components/ui/card";
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from "../components/ui/alert"
+import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import Link from "next/link";
@@ -33,7 +34,7 @@ const login = () => {
     data: loginData,
     error: loginError,
     refetch: loginRefetch,
-    isSuccess: loginIsSuccess
+    isSuccess: loginIsSuccess,
   } = useQuery({
     queryKey: ["data", email, password, "login"],
     queryFn: fetchAuthQuery,
@@ -45,7 +46,7 @@ const login = () => {
     data: signUpData,
     error: signUpError,
     refetch: signUpRefetch,
-    isSuccess: signUpIsSuccess
+    isSuccess: signUpIsSuccess,
   } = useQuery({
     queryKey: ["data", email, password, "signup"],
     queryFn: fetchAuthQuery,
@@ -69,7 +70,7 @@ const login = () => {
     signUpRefetch();
   };
 
-  if(loginIsSuccess) {
+  if (loginIsSuccess) {
     setUser(loginData);
     router.push("/chat");
   }
@@ -86,18 +87,21 @@ const login = () => {
         />
       </div>
       <div className="flex items-center justify-center">
-      {(loginError || signUpError) && (
-                <Alert variant="destructive">
-                  <div />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{JSON.stringify(loginError) || JSON.stringify(signUpError) }</AlertDescription>
-                </Alert>
-              )}
+        {(loginError || signUpError) && (
+          <Alert variant="destructive">
+            <div />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {JSON.stringify(loginError) || JSON.stringify(signUpError)}
+            </AlertDescription>
+          </Alert>
+        )}
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>
-              Enter your username and password to access your account. Or create a new account
+              Enter your username and password to access your account. Or create
+              a new account
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -132,15 +136,35 @@ const login = () => {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Button type="submit" className="w-full" onClick={loginHandler}>
-                Sign In
+              <Button
+                type="submit"
+                className="w-full"
+                onClick={loginHandler}
+                disabled={loginLoading}
+              >
+                {loginLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                    wait
+                  </>
+                ) : (
+                  <>Sign In</>
+                )}
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
                 onClick={signUpHandler}
+                disabled={signUpLoading}
               >
-                Sign Up
+                {signUpLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                    wait
+                  </>
+                ) : (
+                  <>Sign Up</>
+                )}
               </Button>
             </div>
           </CardContent>

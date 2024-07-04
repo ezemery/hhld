@@ -12,10 +12,12 @@ export const createServer = () => {
     .use(morgan("dev"))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors({
+    .use(
+      cors({
         credentials: true,
         origin: process.env.CLIENT_APP,
-      }))
+      }),
+    )
     .use(cookieParser())
     .use(express.json())
     .use("/msgs", msgsRouter);

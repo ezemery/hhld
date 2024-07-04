@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import http from "http";
 import connectToMongoDB from "./db/connectToMongoDB";
 import { addMsgToConversation } from "./controllers/msgs.controllers";
-import { subscribe, publish } from "./redis/msgsPubSub";
+import { subscribe, publish } from "./redis/msgPubSub";
 
 dotenv.config();
 const port = process.env.PORT || 3001;
@@ -24,11 +24,10 @@ const userSocketMap: { [key: string]: any } = {};
 io.on("connection", (socket) => {
   const username = socket.handshake.query.username || "";
 
-  const channelName = `chat_${username}`
- subscribe(channelName, (msg) => {
-   socket.emit("chat msg", JSON.parse(msg));
- });
-
+  const channelName = `chat_${username}`;
+  subscribe(channelName, (msg) => {
+    socket.emit("chat msg", JSON.parse(msg));
+  });
 
   userSocketMap[username] = socket;
 
@@ -38,10 +37,9 @@ io.on("connection", (socket) => {
     if (receiverSocket) {
       receiverSocket.emit("chat msg", msg);
     } else {
-     const channelName = `chat_${msg.receiver}`
-     publish(channelName, JSON.stringify(msg));
-   }
-
+      const channelName = `chat_${msg.receiverId}`;
+      publish(channelName, JSON.stringify(msg));
+    }
   });
 });
 

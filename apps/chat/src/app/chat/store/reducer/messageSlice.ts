@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type MessageType = {
-  [key: string]: {[key: string]:any}[];
+  [key: string]: { [key: string]: any }[];
 };
 // Define the initial state using that type
 const initialState: MessageType = {};
@@ -25,15 +25,15 @@ export const messageSlice = createSlice({
       }>,
     ) => {
       const { message, senderId, receiverId } = action.payload;
-      const id = senderId+"/"+receiverId;
-      const msg = state[id]
-      if(msg){
-        msg.push(action.payload)
-      }else{
-        state[id] = [action.payload]
+      const id = senderId + "/" + receiverId;
+      const msg = state[id];
+      if (msg) {
+        msg.push(action.payload);
+      } else {
+        state[id] = [action.payload];
       }
       //builds a new state and adds the previous messages plus the new message
-      return state
+      return state;
     },
     setWebsocketMessageState: (
       state: MessageType,
@@ -44,34 +44,39 @@ export const messageSlice = createSlice({
       }>,
     ) => {
       const { message, senderId, receiverId } = action.payload;
-      const id = receiverId+"/"+senderId;
-      const msg = state[id]
-      if(msg){
-        msg.push(action.payload)
-      }else{
-        state[id] = [action.payload]
+      const id = receiverId + "/" + senderId;
+      const msg = state[id];
+      if (msg) {
+        msg.push(action.payload);
+      } else {
+        state[id] = [action.payload];
       }
       //builds a new state and adds the previous messages plus the new message
-      return state
+      return state;
     },
     setApiMessageState: (
       state: MessageType,
       action: PayloadAction<{
         senderId: string;
-        message: {[key: string]:any}[];
+        message: { [key: string]: any }[];
         receiverId: string;
       }>,
     ) => {
       const { message, senderId, receiverId } = action.payload;
-      const id = senderId+"/"+receiverId;
-      const msg = state[id]
-      state[id] = message
+      const id = senderId + "/" + receiverId;
+      const msg = state[id];
+      state[id] = message;
       //builds a new state and adds the previous messages plus the new message
-      return state
+      return state;
     },
   },
 });
 
-export const { getMessageState, setMessageState, setWebsocketMessageState,setApiMessageState } = messageSlice.actions;
+export const {
+  getMessageState,
+  setMessageState,
+  setWebsocketMessageState,
+  setApiMessageState,
+} = messageSlice.actions;
 
 export default messageSlice.reducer;

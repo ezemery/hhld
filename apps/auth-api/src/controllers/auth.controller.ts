@@ -40,4 +40,18 @@ export const login = async (req, res) => {
   }
 };
 
+export const logout = (req, res) => {
+  try {
+    res.cookie("jwt", "none", {
+      expires: new Date(Date.now() + 1 * 100),
+      httpOnly: true,
+    });
+    res
+      .status(200)
+      .json({ success: true, message: "User logged out successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "Logout failed" });
+  }
+};
 export default signup;

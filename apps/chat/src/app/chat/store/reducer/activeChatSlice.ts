@@ -10,7 +10,7 @@ export const activeChatId = createSlice({
   initialState,
   reducers: {
     getActiveChatId: (state) => {
-     return state;
+      return state;
     },
     setActiveChatId: (state, action: PayloadAction<string>) => {
       return action.payload;
