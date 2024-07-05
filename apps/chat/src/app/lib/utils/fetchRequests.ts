@@ -55,15 +55,11 @@ export const getMsgQuery = async (queryKey: string[]) => {
   return data;
 };
 
-
 export const logOutUser = async (queryKey: string[]) => {
   const [type] = queryKey;
-  let res = await fetch(
-    `${config.CLIENT_AUTH_HOST}/auth/${type}`,
-    {
-      method: "POST",
-    },
-  );
+  let res = await fetch(`${config.CLIENT_AUTH_HOST}/auth/${type}`, {
+    method: "POST",
+  });
   if (res.status != 200) {
     throw new Error(res.statusText);
   }

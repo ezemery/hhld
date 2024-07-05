@@ -29,6 +29,7 @@ interface PaswwordData {
 const login = () => {
   const [email, setEmailState] = useState("");
   const [password, setPasswordState] = useState("");
+  const { toast } = useToast();
   const {
     isLoading: loginLoading,
     data: loginData,
@@ -87,17 +88,9 @@ const login = () => {
         />
       </div>
       <div className="flex items-center justify-center">
-        {(loginError || signUpError) && (
-          <Alert variant="destructive">
-            <div />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {JSON.stringify(loginError) || JSON.stringify(signUpError)}
-            </AlertDescription>
-          </Alert>
-        )}
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
+            {(signUpError || loginError) && <div>There was an error {JSON.stringify(signUpError) || JSON.stringify(loginError)}</div>}
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>
               Enter your username and password to access your account. Or create
