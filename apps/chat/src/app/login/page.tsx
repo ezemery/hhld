@@ -29,7 +29,6 @@ interface PaswwordData {
 const login = () => {
   const [email, setEmailState] = useState("");
   const [password, setPasswordState] = useState("");
-  const { toast } = useToast();
   const {
     isLoading: loginLoading,
     data: loginData,
