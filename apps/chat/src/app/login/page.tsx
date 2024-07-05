@@ -1,3 +1,4 @@
+"use client"
 import { config } from "../config";
 import { Loader2 } from "lucide-react";
 import {
