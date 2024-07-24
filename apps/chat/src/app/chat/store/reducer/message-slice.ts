@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-type MessageType = {
+interface MessageType {
   [key: string]: { [key: string]: any }[];
 };
 // Define the initial state using that type
@@ -24,7 +24,7 @@ export const messageSlice = createSlice({
         receiverId: string;
       }>,
     ) => {
-      const { message, senderId, receiverId } = action.payload;
+      const { senderId, receiverId } = action.payload;
       const id = senderId + "/" + receiverId;
       const msg = state[id];
       if (msg) {
@@ -43,7 +43,7 @@ export const messageSlice = createSlice({
         receiverId: string;
       }>,
     ) => {
-      const { message, senderId, receiverId } = action.payload;
+      const { senderId, receiverId } = action.payload;
       const id = receiverId + "/" + senderId;
       const msg = state[id];
       if (msg) {
@@ -64,7 +64,7 @@ export const messageSlice = createSlice({
     ) => {
       const { message, senderId, receiverId } = action.payload;
       const id = senderId + "/" + receiverId;
-      const msg = state[id];
+      // const msg = state[id];
       state[id] = message;
       //builds a new state and adds the previous messages plus the new message
       return state;

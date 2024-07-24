@@ -1,3 +1,4 @@
+import { Document, Types } from "mongoose";
 import User from "../models/user.model";
 
 const getUsers = async (req, res) => {

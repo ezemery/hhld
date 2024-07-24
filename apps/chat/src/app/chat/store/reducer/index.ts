@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import activeChatId from "./activeChatSlice";
-import typing from "./typingSlice";
-import message from "./messageSlice";
+import activeChatId from "./active-chat-slice";
+import typing from "./typing-slice";
+import message from "./message-slice";
 
 const rootReducer = combineReducers({
   activeChatId,

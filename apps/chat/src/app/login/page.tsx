@@ -1,5 +1,4 @@
-"use client"
-import { config } from "../config";
+"use client";
 import { Loader2 } from "lucide-react";
 import {
   Card,
@@ -8,26 +7,17 @@ import {
   CardDescription,
   CardContent,
 } from "../components/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
-import { useData } from "../layout";
+import { DataContext } from "../hooks/context";
 import { useQuery } from "@tanstack/react-query";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchAuthQuery } from "../lib/utils/fetchRequests";
+import { fetchAuthQuery } from "../lib/utils/fetch-requests";
 
-interface EmailData {
-  email: string;
-}
-
-interface PaswwordData {
-  password: string;
-}
-
-const login = () => {
+const Login = () => {
   const [email, setEmailState] = useState("");
   const [password, setPasswordState] = useState("");
   const {
@@ -44,16 +34,14 @@ const login = () => {
 
   const {
     isLoading: signUpLoading,
-    data: signUpData,
     error: signUpError,
     refetch: signUpRefetch,
-    isSuccess: signUpIsSuccess,
   } = useQuery({
     queryKey: ["data", email, password, "signup"],
     queryFn: fetchAuthQuery,
     enabled: false,
   });
-  const { setUser } = useData();
+  const { setUser } = useContext(DataContext);
   const router = useRouter();
 
   const emialChangeHandler = (e: FormEvent<HTMLInputElement>) => {
@@ -90,7 +78,12 @@ const login = () => {
       <div className="flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
-            {(signUpError || loginError) && <div>There was an error {JSON.stringify(signUpError) || JSON.stringify(loginError)}</div>}
+            {(signUpError || loginError) && (
+              <div>
+                There was an error{" "}
+                {JSON.stringify(signUpError) || JSON.stringify(loginError)}
+              </div>
+            )}
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>
               Enter your username and password to access your account. Or create
@@ -167,4 +160,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

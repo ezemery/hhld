@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import Redis from "ioredis";
+import Redis, { Callback } from "ioredis";
 
 // Create a Redis instance for subscribing
 const subscriber = new Redis({

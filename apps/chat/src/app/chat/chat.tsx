@@ -2,22 +2,21 @@
 import {
   useEffect,
   useState,
-  ChangeEvent,
-  FormEvent,
   useRef,
   JSX,
   SVGProps,
   MouseEventHandler,
   useLayoutEffect,
+  useContext,
 } from "react";
 import io, { Socket } from "socket.io-client";
 import { useAppSelector, useAppDispatch } from "./hooks";
-import { setTypingState } from "./store/reducer/typingSlice";
+import { setTypingState } from "./store/reducer/typing-slice";
 import {
   setApiMessageState,
   setMessageState,
   setWebsocketMessageState,
-} from "./store/reducer/messageSlice";
+} from "./store/reducer/message-slice";
 import { Button } from "../components/ui/button";
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
@@ -33,24 +32,24 @@ import {
 } from "../components/ui/dropdown-menu";
 import { Textarea } from "../components/ui/textarea";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useData } from "../layout";
+import { DataContext } from "../hooks/context";
 import {
   fetchChatQuery,
   getMsgQuery,
   logOutUser,
-} from "../lib/utils/fetchRequests";
+} from "../lib/utils/fetch-requests";
 import { config } from "../config";
 import { useRouter } from "next/navigation";
-import { setActiveChatId } from "./store/reducer/activeChatSlice";
+import { setActiveChatId } from "./store/reducer/active-chat-slice";
 
 function ChatWindow() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const activeChatId = useAppSelector((state) => state.activeChatId);
-  const typing = useAppSelector((state) => state.typing);
+  // const typing = useAppSelector((state) => state.typing);
   const message = useAppSelector((state) => state.message);
   const dispatch = useAppDispatch();
   const [socket, setSocket] = useState<Socket>();
-  const { user, setUser } = useData();
+  const { user, setUser } = useContext(DataContext);
   const router = useRouter();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
@@ -70,6 +69,7 @@ function ChatWindow() {
     enabled: false,
     retry: false,
   });
+
   const { mutate } = useMutation({
     mutationFn: getMsgQuery,
     retry: false,
@@ -92,10 +92,28 @@ function ChatWindow() {
     if (!user) {
       refetch();
     }
-  }, []);
+  }, [user, refetch]);
 
   useEffect(() => {
     // Establish WebSocket connection
+    if (user && user.username) {
+      // @ts-expect-error
+      pendo.initialize({
+        visitor: {
+          id: user.username,
+          email: user.username,
+          firstName: "pendo_firstname",
+          lastName: "pendo_lastname",
+        },
+
+        account: {
+          id: user.username,
+          accountName: "chatapp",
+          payingStatus: "free",
+        },
+      });
+    }
+
     const newSocket = io(config.CLIENT_CHAT_API_HOST, {
       query: {
         username: user && user.username,
@@ -114,13 +132,13 @@ function ChatWindow() {
 
   const logoutFn = () => {
     logoutMutate(["logout"], {
-      onSuccess: (data) => {
+      onSuccess: () => {
         router.push("/");
       },
     });
   };
 
-  const clickHandler = async (e: MouseEventHandler<HTMLButtonElement>) => {
+  const clickHandler: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(setTypingState(inputRef.current?.value || ""));
     const msgToBeSent = {
       message: inputRef.current?.value,
@@ -132,10 +150,10 @@ function ChatWindow() {
       socket.emit("chat msg", msgToBeSent);
       dispatch(
         setMessageState({
-          senderId: user && user.username,
+          senderId: (user && user.username) || "",
           message: inputRef.current?.value || "",
           receiverId: activeChatId,
-        }),
+        })
       );
     }
     dispatch(setTypingState(""));
@@ -166,13 +184,13 @@ function ChatWindow() {
                 contacts
                   .filter(
                     (contact: { username: string; _id: string }) =>
-                      contact.username != user.username,
+                      contact.username !== user.username
                   )
                   .map((contact: { username: string; _id: string }) => (
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={`justify-start gap-2 cursor-pointer ${contact.username == activeChatId ? `hover:bg-primary bg-primary dark:bg-primary/50` : `bg-muted/40 dark:bg-muted/50`}`}
+                      className={`justify-start gap-2 cursor-pointer ${contact.username === activeChatId ? `hover:bg-primary bg-primary dark:bg-primary/50` : `bg-muted/40 dark:bg-muted/50`}`}
                       asChild
                       key={contact._id}
                       onClick={() => {
@@ -184,7 +202,7 @@ function ChatWindow() {
                                 senderId: user.username,
                                 message: data,
                                 receiverId: contact.username,
-                              }),
+                              })
                             );
                           },
                         });
@@ -198,7 +216,7 @@ function ChatWindow() {
                           </AvatarFallback>
                         </Avatar>
                         <span
-                          className={`${contact.username == activeChatId ? `font-semibold hover:text-primary-foreground text-primary-foreground dark:text-primary-foreground` : ``}`}
+                          className={`${contact.username === activeChatId ? `font-semibold hover:text-primary-foreground text-primary-foreground dark:text-primary-foreground` : ``}`}
                         >
                           {contact.username}
                         </span>
@@ -244,13 +262,13 @@ function ChatWindow() {
                       contacts
                         .filter(
                           (contact: { username: string; _id: string }) =>
-                            contact.username != user.username,
+                            contact.username !== user.username
                         )
                         .map((contact: { username: string; _id: string }) => (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className={`justify-start gap-2 cursor-pointer ${contact.username == activeChatId ? `hover:bg-primary bg-primary dark:bg-primary/50` : `bg-muted/40 dark:bg-muted/50`}`}
+                            className={`justify-start gap-2 cursor-pointer ${contact.username === activeChatId ? `hover:bg-primary bg-primary dark:bg-primary/50` : `bg-muted/40 dark:bg-muted/50`}`}
                             asChild
                             key={contact._id}
                             onClick={() => {
@@ -267,7 +285,7 @@ function ChatWindow() {
                                 </AvatarFallback>
                               </Avatar>
                               <span
-                                className={`${contact.username == activeChatId ? `font-semibold hover:text-primary-foreground text-primary-foreground dark:text-primary-foreground` : ``}`}
+                                className={`${contact.username === activeChatId ? `font-semibold hover:text-primary-foreground text-primary-foreground dark:text-primary-foreground` : ``}`}
                               >
                                 {contact.username}
                               </span>
@@ -344,7 +362,7 @@ function ChatWindow() {
                     message[user.username + "/" + activeChatId] &&
                     message[user.username + "/" + activeChatId].map(
                       (mes, indx) => {
-                        if (mes.senderId != user.username) {
+                        if (mes.senderId !== user.username) {
                           return (
                             <div key={indx} className="flex items-start gap-4">
                               <Avatar className="w-8 h-8 border dark:border-foreground">
@@ -384,7 +402,7 @@ function ChatWindow() {
                             </div>
                           );
                         }
-                      },
+                      }
                     )}
                 </div>
               </div>
@@ -430,7 +448,7 @@ function ChatWindow() {
   // }
 }
 
-function MenuIcon(props) {
+function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -451,7 +469,9 @@ function MenuIcon(props) {
   );
 }
 
-function MessageCircleDashedIcon(props) {
+function MessageCircleDashedIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
   return (
     <svg
       {...props}
@@ -477,7 +497,7 @@ function MessageCircleDashedIcon(props) {
   );
 }
 
-function XIcon(props) {
+function XIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -498,7 +518,7 @@ function XIcon(props) {
 }
 
 function Package2Icon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
 ) {
   return (
     <svg

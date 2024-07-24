@@ -13,7 +13,7 @@ export const contacts = createSlice({
   initialState,
   reducers: {
     getContactsState: (state) => {
-      state = state;
+      return state;
     },
     setContactState: (state, action: PayloadAction<Contacts>) => {
       return [...state, ...action.payload];

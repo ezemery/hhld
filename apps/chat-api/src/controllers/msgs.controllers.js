@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import Conversation from "../models/chat.model";
 
 export const addMsgToConversation = async (participants, msg) => {

@@ -9,7 +9,7 @@ export const fetchChatQuery = async ({ queryKey }: { queryKey: string[] }) => {
     },
     credentials: "include",
   });
-  if (res.status != 200) {
+  if (res.status !== 200) {
     throw new Error(res.statusText);
   }
   let data = await res.json();
@@ -29,7 +29,7 @@ export const fetchAuthQuery = async ({ queryKey }: { queryKey: string[] }) => {
       "Content-Type": "application/json",
     },
   });
-  if (res.status != 200) {
+  if (res.status !== 200) {
     throw new Error(res.statusText);
   }
   let data = await res.json();
@@ -48,7 +48,7 @@ export const getMsgQuery = async (queryKey: string[]) => {
       },
     },
   );
-  if (res.status != 200) {
+  if (res.status !== 200) {
     throw new Error(res.statusText);
   }
   let data = await res.json();
@@ -60,7 +60,7 @@ export const logOutUser = async (queryKey: string[]) => {
   let res = await fetch(`${config.CLIENT_AUTH_HOST}/auth/${type}`, {
     method: "POST",
   });
-  if (res.status != 200) {
+  if (res.status !== 200) {
     throw new Error(res.statusText);
   }
   let data = await res.json();

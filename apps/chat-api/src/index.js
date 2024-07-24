@@ -20,7 +20,7 @@ const io = new Server(server, {
 // io is an instance of the Socket.IO server class that is associated with and attached to the HTTP server
 
 // Allow WebSocket connections from different origins to the Socket.IO server by relaxing the browser's same-origin policy
-const userSocketMap: { [key: string]: any } = {};
+const userSocketMap = {};
 io.on("connection", (socket) => {
   const username = socket.handshake.query.username || "";
 
