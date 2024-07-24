@@ -58,6 +58,7 @@ function ChatWindow() {
     queryFn: fetchChatQuery,
     retry: false,
   });
+
   const {
     error: userError,
     data,
@@ -84,15 +85,13 @@ function ChatWindow() {
     setUser(data);
   }
 
-  if (contactsError || userError) {
-    //setShowErrorPopup(true)
-  }
+ 
 
   useLayoutEffect(() => {
     if (!user) {
       refetch();
     }
-  }, [user, refetch]);
+  }, []);
 
   useEffect(() => {
     // Establish WebSocket connection
@@ -133,6 +132,7 @@ function ChatWindow() {
   const logoutFn = () => {
     logoutMutate(["logout"], {
       onSuccess: () => {
+        document.cookie = `jwt=; Max-Age=0`;
         router.push("/");
       },
     });

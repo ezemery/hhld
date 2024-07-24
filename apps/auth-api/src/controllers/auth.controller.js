@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.model";
-import generateJWTTokenAndSetCookie from "../utils/generateToken";
+import {generateJWTTokenAndSetSession} from "../utils/generateToken";
+import Session from "../models/session.model";
 
 const signup = async (req, res) => {
   try {
@@ -11,10 +12,8 @@ const signup = async (req, res) => {
       res.status(201).json({ message: "Username already exists" });
     } else {
       const user = new User({ username: username, password: hashedPassword });
-      console.log(user);
       await user.save();
-      generateJWTTokenAndSetCookie(user._id, res);
-      res.status(201).json({ message: "User signed up successfully" });
+      const token = generateJWTTokenAndSetSession(user, res);
     }
   } catch (error) {
     console.log(error.message);
@@ -29,26 +28,24 @@ export const login = async (req, res) => {
     if (!user) return res.status(401).json({ error: "Auth failed" });
     const passwordMatch = await bcrypt.compare(password, user?.password || "");
     if (!passwordMatch) return res.status(401).json({ error: "Auth failed" });
-    generateJWTTokenAndSetCookie(user._id, res);
-    res.status(200).json({
-      _id: user._id,
-      username: user.username,
-    });
+    const token = generateJWTTokenAndSetSession(user, res);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Login failed" });
   }
 };
 
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
+   // Get token from cookie
+  const token = req.cookies.jwt;
+
+  // Check if token exists
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
   try {
-    res.cookie("jwt", "none", {
-      expires: new Date(Date.now() + 1 * 100),
-      httpOnly: true,
-    });
-    res
-      .status(200)
-      .json({ success: true, message: "User logged out successfully" });
+    const deletedToken = await Session.deleteOne({ session:token });
+    res.status(200).json({ success: true, message: "User logged out successfully" });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Logout failed" });

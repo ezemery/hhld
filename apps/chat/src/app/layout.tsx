@@ -1,7 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./styles/global.css";
-import "@repo/ui/styles.css";
 import { config } from "./config";
 import { Inter } from "next/font/google";
 import { useState, useEffect } from "react";

@@ -59,6 +59,10 @@ export const logOutUser = async (queryKey: string[]) => {
   const [type] = queryKey;
   let res = await fetch(`${config.CLIENT_AUTH_HOST}/auth/${type}`, {
     method: "POST",
+     headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
   });
   if (!res.ok) {
     throw new Error(res.statusText);

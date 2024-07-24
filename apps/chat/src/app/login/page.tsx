@@ -24,7 +24,6 @@ const Login = () => {
      mutate: loginMutate,
      isPending: loginLoading,
      data: loginData,
-     isSuccess:loginSuccess,
    } = useMutation({
      mutationFn: fetchAuthQuery,
      retry: false,
@@ -50,15 +49,23 @@ const Login = () => {
     setPasswordState(e.currentTarget?.value);
   };
 
-  if (loginSuccess) {
-    setUser(loginData);
-    router.push("/chat");
-  }
   const loginHandler = () => {
-     loginMutate(["data", email, password, "login"]);
+     loginMutate(["data", email, password, "login"], {
+       onSuccess: (data) => {
+        setUser(data);
+        document.cookie = `jwt=${data.token}; Max-Age=${15 * 24 * 60 * 60 * 1000}; SameSite=None; Secure`;
+        router.push("/chat");
+       },
+     });
   };
   const signUpHandler = () => {
-    signUpMutate(["data", email, password, "signup"]);
+    signUpMutate(["data", email, password, "signup"],{
+      onSuccess: (data) => {
+         setUser(data);
+         document.cookie = `jwt=${data.token}; Max-Age=${15 * 24 * 60 * 60 * 1000}; SameSite=None; Secure`;
+         router.push("/chat");
+      }
+    });
   };
 
 

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import Session from "../models/session.model";
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   // Get token from cookie
   const token = req.cookies.jwt;
 
@@ -11,11 +12,16 @@ const verifyToken = (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId;
-    next();
+    const foundToken = await Session.findOne({ session:token });
+    if(foundToken){
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.userId = decoded.userId;
+      next();
+    }else{
+       res.status(401).json({ message: "Unauthorized user" });
+    }
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+     res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
 
