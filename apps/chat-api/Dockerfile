@@ -11,7 +11,6 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune api --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -20,13 +19,11 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # First install dependencies (as they change less often)
-COPY .gitignore .gitignore
 COPY --from=builder /app/package.json ./package.json
 RUN npm install
 
 # Build the project and its dependencies
 COPY --from=builder /app .
-COPY turbo.json turbo.json
 
 # Uncomment and use build args to enable remote caching
 # ARG TURBO_TEAM
@@ -34,15 +31,14 @@ COPY turbo.json turbo.json
 
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
-# ENV PORT=$PORT
-# ENV CLIENT_APP=$CLIENT_APP
-# ENV MONGO_URI=$MONGO_URI
-# ENV REDIS_HOST=$REDIS_HOST
-# ENV REDIS_PORT=$REDIS_PORT
-# ENV REDIS_PWD=$REDIS_PWD
-# ENV REDIS_USER=$REDIS_USER
 
-RUN yarn turbo build
+ENV PORT=$PORT
+ENV CLIENT_APP=$CLIENT_APP
+ENV MONGO_URI=$MONGO_URI
+ENV REDIS_HOST=$REDIS_HOST
+ENV REDIS_PORT=$REDIS_PORT
+ENV REDIS_PWD=$REDIS_PWD
+ENV REDIS_USER=$REDIS_USER
 
 FROM base AS runner
 WORKDIR /app
@@ -53,4 +49,4 @@ RUN adduser --system --uid 1001 expressjs
 USER expressjs
 COPY --from=installer /app .
 
-CMD node apps/src/index.js
+CMD npm start

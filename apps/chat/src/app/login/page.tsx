@@ -12,7 +12,7 @@ import { Input } from "../components/ui/input";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
 import { DataContext } from "../hooks/context";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAuthQuery } from "../lib/utils/fetch-requests";
@@ -20,27 +20,26 @@ import { fetchAuthQuery } from "../lib/utils/fetch-requests";
 const Login = () => {
   const [email, setEmailState] = useState("");
   const [password, setPasswordState] = useState("");
-  const {
-    isLoading: loginLoading,
-    data: loginData,
-    error: loginError,
-    refetch: loginRefetch,
-    isSuccess: loginIsSuccess,
-  } = useQuery({
-    queryKey: ["data", email, password, "login"],
-    queryFn: fetchAuthQuery,
-    enabled: false,
-  });
+   const {
+     mutate: loginMutate,
+     isPending: loginLoading,
+     data: loginData,
+     error: loginError,
+   } = useMutation({
+     mutationFn: fetchAuthQuery,
+     retry: false,
+   });
 
   const {
-    isLoading: signUpLoading,
+    mutate: signUpMutate,
+    isPending: signUpLoading,
     error: signUpError,
-    refetch: signUpRefetch,
-  } = useQuery({
-    queryKey: ["data", email, password, "signup"],
-    queryFn: fetchAuthQuery,
-    enabled: false,
+    isSuccess:signUpSuccess,
+  } = useMutation({
+    mutationFn: fetchAuthQuery,
+    retry: false,
   });
+
   const { setUser } = useContext(DataContext);
   const router = useRouter();
 
@@ -53,16 +52,19 @@ const Login = () => {
   };
 
   const loginHandler = () => {
-    loginRefetch();
+     loginMutate(["data", email, password, "login"], {
+       onSuccess: (data) => {
+         setUser(loginData);
+         router.push("/chat");
+       },
+     });
   };
   const signUpHandler = () => {
-    signUpRefetch();
+    signUpMutate(["data", email, password, "signup"], {
+      onSuccess: (data) => {},
+    });
   };
 
-  if (loginIsSuccess) {
-    setUser(loginData);
-    router.push("/chat");
-  }
 
   return (
     <div className="grid md:grid-cols-2 items-center h-screen bg-muted">
@@ -78,6 +80,7 @@ const Login = () => {
       <div className="flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
+            {signUpSuccess && <div>Signup successfully, Now click SignIn...</div> }
             {(signUpError || loginError) && (
               <div>
                 There was an error{" "}
