@@ -12,7 +12,7 @@ import { Input } from "../components/ui/input";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
 import { DataContext } from "../hooks/context";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAuthQuery } from "../lib/utils/fetch-requests";
@@ -53,7 +53,7 @@ const Login = () => {
 
   const loginHandler = () => {
      loginMutate(["data", email, password, "login"], {
-       onSuccess: (data) => {
+       onSuccess: () => {
          setUser(loginData);
          router.push("/chat");
        },
@@ -61,7 +61,7 @@ const Login = () => {
   };
   const signUpHandler = () => {
     signUpMutate(["data", email, password, "signup"], {
-      onSuccess: (data) => {},
+      onSuccess: () => {},
     });
   };
 
