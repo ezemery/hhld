@@ -24,17 +24,16 @@ const Login = () => {
      mutate: loginMutate,
      isPending: loginLoading,
      data: loginData,
-     error: loginError,
+     isSuccess:loginSuccess,
    } = useMutation({
      mutationFn: fetchAuthQuery,
      retry: false,
    });
 
   const {
+    data:signUpData,
     mutate: signUpMutate,
     isPending: signUpLoading,
-    error: signUpError,
-    isSuccess:signUpSuccess,
   } = useMutation({
     mutationFn: fetchAuthQuery,
     retry: false,
@@ -51,18 +50,15 @@ const Login = () => {
     setPasswordState(e.currentTarget?.value);
   };
 
+  if (loginSuccess) {
+    setUser(loginData);
+    router.push("/chat");
+  }
   const loginHandler = () => {
-     loginMutate(["data", email, password, "login"], {
-       onSuccess: () => {
-         setUser(loginData);
-         router.push("/chat");
-       },
-     });
+     loginMutate(["data", email, password, "login"]);
   };
   const signUpHandler = () => {
-    signUpMutate(["data", email, password, "signup"], {
-      onSuccess: () => {},
-    });
+    signUpMutate(["data", email, password, "signup"]);
   };
 
 
@@ -80,11 +76,9 @@ const Login = () => {
       <div className="flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
-            {signUpSuccess && <div>Signup successfully, Now click SignIn...</div> }
-            {(signUpError || loginError) && (
+            {(signUpData || loginData) && (
               <div>
-                There was an error{" "}
-                {JSON.stringify(signUpError) || JSON.stringify(loginError)}
+                {JSON.stringify(signUpData) || JSON.stringify(loginData)}
               </div>
             )}
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
