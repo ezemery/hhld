@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -r esbuild-register ./src/index.js",
     "clean": "rm -rf dist",
     "dev": "nodemon --exec \"node -r esbuild-register ./src/index.js\" -e .js",
     "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" ",
