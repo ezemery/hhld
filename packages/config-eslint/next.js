@@ -72,6 +72,7 @@ module.exports = {
     "@typescript-eslint/no-empty-interface":"off",
     "@typescript-eslint/no-non-null-assertion":"off",
     "@typescript-eslint/naming-convention": "off",
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "@typescript-eslint/dot-notation":"off"
   },
 };
