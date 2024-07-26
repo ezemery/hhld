@@ -3,7 +3,7 @@ import { DataContext } from "./context";
 import { useContext, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { fetchChatQuery } from "../lib/utils/fetch-requests";
+import { fetchChatQuery } from "../lib/fetch-requests";
 
 const Auth = (Component: React.FunctionComponent) => {
   return function IsAuth() {

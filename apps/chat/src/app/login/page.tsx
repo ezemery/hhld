@@ -15,22 +15,23 @@ import { DataContext } from "../hooks/context";
 import { useMutation } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchAuthQuery } from "../lib/utils/fetch-requests";
+import { fetchAuthQuery } from "../lib/fetch-requests";
+import { setCookie } from "../lib/cookie";
 
 const Login = () => {
   const [email, setEmailState] = useState("");
   const [password, setPasswordState] = useState("");
-   const {
-     mutate: loginMutate,
-     isPending: loginLoading,
-     data: loginData,
-   } = useMutation({
-     mutationFn: fetchAuthQuery,
-     retry: false,
-   });
+  const {
+    mutate: loginMutate,
+    isPending: loginLoading,
+    data: loginData,
+  } = useMutation({
+    mutationFn: fetchAuthQuery,
+    retry: false,
+  });
 
   const {
-    data:signUpData,
+    data: signUpData,
     mutate: signUpMutate,
     isPending: signUpLoading,
   } = useMutation({
@@ -50,24 +51,37 @@ const Login = () => {
   };
 
   const loginHandler = () => {
-     loginMutate(["data", email, password, "login"], {
-       onSuccess: (data) => {
-        setUser(data);
-        document.cookie = `jwt=${data.token}; Max-Age=${15 * 24 * 60 * 60 * 1000}; SameSite=None; Secure`;
-        router.push("/chat");
-       },
-     });
-  };
-  const signUpHandler = () => {
-    signUpMutate(["data", email, password, "signup"],{
+    loginMutate(["data", email, password, "login"], {
       onSuccess: (data) => {
-         setUser(data);
-         document.cookie = `jwt=${data.token}; Max-Age=${15 * 24 * 60 * 60 * 1000}; SameSite=None; Secure`;
-         router.push("/chat");
-      }
+        setUser(data);
+        setCookie({
+          name: "jwt",
+          value: data.token,
+          options: {
+            "Max-Age": 15 * 24 * 60 * 60 * 1000,
+            SameSite: "strict",
+          },
+        });
+        router.push("/chat");
+      },
     });
   };
-
+  const signUpHandler = () => {
+    signUpMutate(["data", email, password, "signup"], {
+      onSuccess: (data) => {
+        setUser(data);
+        setCookie({
+          name: "jwt",
+          value: data.token,
+          options: {
+            "Max-Age": 15 * 24 * 60 * 60 * 1000,
+            SameSite: "strict",
+          },
+        });
+        router.push("/chat");
+      },
+    });
+  };
 
   return (
     <div className="grid md:grid-cols-2 items-center h-screen bg-muted">

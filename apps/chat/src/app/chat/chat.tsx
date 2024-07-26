@@ -33,14 +33,11 @@ import {
 import { Textarea } from "../components/ui/textarea";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DataContext } from "../hooks/context";
-import {
-  fetchChatQuery,
-  getMsgQuery,
-  logOutUser,
-} from "../lib/utils/fetch-requests";
+import { fetchChatQuery, getMsgQuery, logOutUser } from "../lib/fetch-requests";
 import { config } from "../config";
 import { useRouter } from "next/navigation";
 import { setActiveChatId } from "./store/reducer/active-chat-slice";
+
 
 function ChatWindow() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -84,8 +81,6 @@ function ChatWindow() {
   if (isSuccess) {
     setUser(data);
   }
-
- 
 
   useLayoutEffect(() => {
     if (!user) {

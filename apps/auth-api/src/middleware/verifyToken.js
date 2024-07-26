@@ -3,7 +3,9 @@ import Session from "../models/session.model";
 
 const verifyToken = async (req, res, next) => {
   // Get token from cookie
-  const token = req.cookies.jwt;
+  //const token = req.cookies.jwt;
+  const authHeader = req.header("Authorization");
+  const token = authHeader && authHeader.split(' ')[1];
 
   // Check if token exists
   if (!token) {

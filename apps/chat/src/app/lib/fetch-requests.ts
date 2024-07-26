@@ -1,10 +1,15 @@
-import { config } from "../../config";
-
+import { config } from "../config";
+import { getCookie } from "./cookie";
 export const fetchChatQuery = async ({ queryKey }: { queryKey: string[] }) => {
   const [type] = queryKey;
+  const headers:{[key: string]: any} = {}
+    if(getCookie("jwt")){
+      headers["Authorization"] = "Bearer "+ getCookie("jwt");
+    }
   let res = await fetch(`${config.CLIENT_AUTH_HOST}/${type}`, {
     method: "GET",
     headers: {
+      ...headers,
       "Content-Type": "application/json",
     },
     credentials: "include",
@@ -18,6 +23,10 @@ export const fetchChatQuery = async ({ queryKey }: { queryKey: string[] }) => {
 
 export const fetchAuthQuery = async (queryKey: string[]) => {
   const [, email, password, type] = queryKey;
+   const headers:{[key: string]: any} = {}
+    if(getCookie("jwt")){
+      headers["Authorization"] = "Bearer "+ getCookie("jwt");
+    }
   let res = await fetch(`${config.CLIENT_AUTH_HOST}/auth/${type}`, {
     method: "POST",
     body: JSON.stringify({
@@ -26,6 +35,7 @@ export const fetchAuthQuery = async (queryKey: string[]) => {
     }),
     credentials: "include",
     headers: {
+      ...headers,
       "Content-Type": "application/json",
     },
   });
@@ -38,12 +48,17 @@ export const fetchAuthQuery = async (queryKey: string[]) => {
 
 export const getMsgQuery = async (queryKey: string[]) => {
   const [type, receiver, sender] = queryKey;
+   const headers:{[key: string]: any} = {}
+    if(getCookie("jwt")){
+      headers["Authorization"] = "Bearer "+ getCookie("jwt");
+    }
   let res = await fetch(
     `${config.CLIENT_CHAT_API_HOST}/${type}?receiver=${receiver}&sender=${sender}`,
     {
       method: "GET",
       credentials: "include",
       headers: {
+        ...headers,
         "Content-Type": "application/json",
       },
     },
@@ -57,9 +72,14 @@ export const getMsgQuery = async (queryKey: string[]) => {
 
 export const logOutUser = async (queryKey: string[]) => {
   const [type] = queryKey;
+   const headers:{[key: string]: any} = {}
+    if(getCookie("jwt")){
+      headers["Authorization"] = "Bearer "+ getCookie("jwt");
+    }
   let res = await fetch(`${config.CLIENT_AUTH_HOST}/auth/${type}`, {
     method: "POST",
      headers: {
+      ...headers,
       "Content-Type": "application/json",
     },
     credentials: "include",

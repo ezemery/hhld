@@ -37,12 +37,14 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
    // Get token from cookie
-  const token = req.cookies.jwt;
+  const authHeader = req.header("Authorization");
+  const token = authHeader && authHeader.split(' ')[1];
 
   // Check if token exists
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
+  
   try {
     const deletedToken = await Session.deleteOne({ session:token });
     res.status(200).json({ success: true, message: "User logged out successfully" });
