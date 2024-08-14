@@ -13,7 +13,25 @@ const handler = NextAuth({
                 access_type: "offline",
                 response_type: "code"
                 }
-            }
+            },
+             session: {
+                jwt: true,
+                maxAge: 15 * 24 * 60 * 60, // 30 days
+            },
+            jwt: {
+                secret: process.env.JWT_SECRET,
+            },
+            cookies: {
+                sessionToken: {
+                name: `__Secure-next-auth.session-token`,
+                options: {
+                    httpOnly: true,
+                    sameSite: 'lax',
+                    path: '/',
+                    secure: process.env.NODE_ENV === 'production',
+                },
+                },
+            },
         }),
         GitHubProvider({
             clientId: config.GITHUB_OAUTH_CLIENT_ID,
