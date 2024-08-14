@@ -6,11 +6,11 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "../components/ui/card";
-import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
+} from "@repo/ui/card";
+import { Label } from "@repo/ui/label";
+import { Input } from "@repo/ui/input";
 import Link from "next/link";
-import { Button } from "../components/ui/button";
+import { Button } from "@repo/ui/button";
 import { DataContext } from "../hooks/context";
 import { useMutation } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";

@@ -1,0 +1,56 @@
+{
+  "name": "@repo/ui",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./utils": "./lib/utils",
+    "./styles.css": "./dist/index.css",
+    "./card": "./src/card.tsx",
+    "./alert": "./src/alert.tsx",
+    "./avatar": "./src/avatar.tsx",
+    "./input": "./src/input.tsx",
+    "./dropdown-menu": "./src/dropdown-menu.tsx",
+    "./label": "./src/label.tsx",
+    "./sheet": "./src/sheet.tsx",
+    "./textarea": "./src/textarea.tsx",
+    "./toast": "./src/toast.tsx",
+    "./toaster": "./src/toaster.tsx",
+    "./button": "./src/button.tsx"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "lint": "eslint src/",
+    "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "dependencies":{
+    "tailwind-merge": "^2.5.2",
+    "clsx": "^2.1.1",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
+    "lucide-react": "^0.397.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/tailwind-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/react": "^18.2.61",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  }
+}

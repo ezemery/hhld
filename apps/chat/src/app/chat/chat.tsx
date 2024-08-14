@@ -17,11 +17,11 @@ import {
   setMessageState,
   setWebsocketMessageState,
 } from "./store/reducer/message-slice";
-import { Button } from "../components/ui/button";
+import { Button } from "@repo/ui/button";
 import Link from "next/link";
-import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
-import { Input } from "../components/ui/input";
-import { Sheet, SheetTrigger, SheetContent } from "../components/ui/sheet";
+import { Avatar, AvatarImage, AvatarFallback } from "@repo/ui/avatar";
+import { Input } from "@repo/ui/input";
+import { Sheet, SheetTrigger, SheetContent } from "@repo/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
