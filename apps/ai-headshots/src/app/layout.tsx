@@ -1,7 +1,8 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
-import { cn } from "./lib/utils";
+//@ts-expect-error
+import { cn } from "@repo/ui/utils";
 import "./globals.css";
 
 const fontHeading = Inter({

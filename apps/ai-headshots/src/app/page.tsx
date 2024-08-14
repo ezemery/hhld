@@ -1,6 +1,4 @@
 "use client"
-import Link from "next/link";
-import { CameraIcon } from "./components/ui/logo";
 import { Header } from "./components/ui/header";
 
 export default function Home() {
