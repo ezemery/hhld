@@ -1,30 +1,54 @@
+"use client"
+import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
-import { JSX, SVGProps } from "react";
-
+import { JSX, SVGProps, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { setCookie } from "../lib/cookie"
+import { Header } from "../components/ui/header";
 export default function Component() {
+  const router = useRouter();
+  const [loginLoading, setLoginLoading] = useState(false);
+    const { data } = useSession();
+    if (data) {
+      // const parsedData = JSON.parse(data);
+      console.log("session data : ", data);
+      setCookie({
+        name: "ai_headshots_session",
+        value: JSON.stringify(data?.user),
+        options: {
+          "Max-Age": data?.expires,
+          SameSite: "strict",
+        },
+      });
+      router.push("/dashboard");
+    }
+
+   const signin = () => {
+     setLoginLoading(true)
+     signIn("google");
+   };
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+  <div className="flex flex-col min-h-dvh">
+    <Header/>
+    <div className="flex flex-col bg-background">
       <div className="container mx-auto flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              Or{" "}
-              <Link
-                href="#"
-                className="font-medium text-primary hover:text-primary/80"
-                prefetch={false}
-              >
-                start your 14-day free trial
-              </Link>
-            </p>
           </div>
-          <Button className="w-full">
+          <Button className="w-full" onClick={signin}>
             <ChromeIcon className="mr-2 h-5 w-5" />
-            Sign in with Google
+            {loginLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+              </>
+            ) : (
+              <>Sign In With Google</>
+            )}
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             By signing in, you agree to our{" "}
@@ -47,6 +71,7 @@ export default function Component() {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 }
@@ -73,3 +98,4 @@ function ChromeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
