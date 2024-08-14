@@ -29,8 +29,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from "../components/ui/dropdown-menu";
-import { Textarea } from "../components/ui/textarea";
+} from "@repo/ui/dropdown-menu";
+import { Textarea } from "@repo/ui/textarea";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DataContext } from "../hooks/context";
 import { fetchChatQuery, getMsgQuery, logOutUser } from "../lib/fetch-requests";
