@@ -144,7 +144,7 @@ const Login = () => {
                 type="submit"
                 className="w-full"
                 onClick={loginHandler}
-                disabled={loginLoading}
+                disabled={loginLoading || signUpLoading}
               >
                 {loginLoading ? (
                   <>
@@ -159,7 +159,7 @@ const Login = () => {
                 variant="outline"
                 className="w-full"
                 onClick={signUpHandler}
-                disabled={signUpLoading}
+                disabled={signUpLoading || loginLoading}
               >
                 {signUpLoading ? (
                   <>
