@@ -7,10 +7,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar"
 import { Input } from "../components/ui/input"
 import { CameraIcon } from "../components/ui/logo"
 import { getCookie } from "../lib/cookie"
-import { useState } from "react"
+import { useLayoutEffect, useState } from "react"
 import { signOut } from "next-auth/react";
 export default function Dashboard() {
-    const [user, setUser] = useState(() => JSON.parse(getCookie("ai_headshots_session")))
+    const [user, setUser] = useState()
+    useLayoutEffect(() => {
+        setUser(() => JSON.parse(getCookie("ai_headshots_session")))
+    },[])
+
     const signout = () => {
      console.log("Signing out of Google");
      signOut({ callbackUrl: '/login' });
@@ -27,8 +31,8 @@ export default function Dashboard() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src={user.image} alt="@shadcn" />
-                  <AvatarFallback>{user.name.split(" ")[0]}</AvatarFallback>
+                  <AvatarImage src={user?.image} alt="@shadcn" />
+                  <AvatarFallback>{user?.name.split(" ")[0]}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
