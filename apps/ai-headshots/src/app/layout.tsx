@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 //@ts-expect-error
 import { cn } from "@repo/ui/utils";
+import "@repo/ui/style.css"
 import "./globals.css";
 
 const fontHeading = Inter({
